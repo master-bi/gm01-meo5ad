@@ -77,27 +77,20 @@
     }
 
     .btn-row {
-      display: flex;
-      gap: 8px;
       margin-top: 10px;
     }
     .btn {
-      flex: 1;
+      width: 100%;
       border-radius: 999px;
       border: none;
-      padding: 8px 0;
-      font-size: 14px;
+      padding: 10px 0;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
     }
     .btn-primary {
       background: #0a84ff;
       color: #ffffff;
-    }
-    .btn-secondary {
-      background: transparent;
-      color: #ffffff;
-      border: 1px solid rgba(255,255,255,0.5);
     }
 
     .stats-row {
@@ -108,15 +101,18 @@
       font-size: 11px;
       color: #cfd3dd;
     }
+
     .stats-item-title {
       font-size: 10px;
       color: #8a92a2;
       margin-bottom: 4px;
     }
+
     .big-score {
       font-size: 20px;
       font-weight: 600;
     }
+
     .star-line {
       height: 6px;
       border-radius: 999px;
@@ -144,22 +140,26 @@
       padding: 12px;
       border: 1px solid rgba(255,255,255,0.06);
     }
+
     .rating-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
     }
+
     .rating-left {
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
+
     .rating-small-star {
       color: #ffcc48;
       letter-spacing: 1px;
       font-size: 12px;
     }
+
     .rating-total {
       font-size: 11px;
       color: #8f96a5;
@@ -170,16 +170,19 @@
       padding-top: 10px;
       border-top: 1px solid rgba(255,255,255,0.06);
     }
+
     .review-title-row {
       display: flex;
       justify-content: space-between;
       margin-bottom: 4px;
       font-size: 12px;
     }
+
     .review-name {
       font-size: 11px;
       color: #c2c9d6;
     }
+
     .review-text {
       font-size: 11px;
       color: #d5dae6;
@@ -193,6 +196,7 @@
       padding: 10px 12px;
       font-size: 12px;
     }
+
     .info-row {
       display: flex;
       justify-content: space-between;
@@ -202,9 +206,11 @@
     .info-row:last-child {
       border-bottom: none;
     }
+
     .info-label {
       color: #9aa0b3;
     }
+
     .info-value {
       color: #e1e5f2;
     }
@@ -216,20 +222,6 @@
       line-height: 1.5;
     }
 
-    .bottom-domain {
-      margin-top: 12px;
-      display: flex;
-      justify-content: center;
-    }
-    .domain-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.4);
-      padding: 8px 16px;
-      font-size: 13px;
-      color: #ffffff;
-      background: rgba(255,255,255,0.04);
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -238,16 +230,15 @@
       <!-- 上半部：icon + 名稱 + 按鈕 -->
       <div class="top-row">
         <div class="icon">
-          <!-- TODO：如果有 icon 圖片，把下面 <span> 換成 <img src="你的icon.png"> -->
+          <!-- TODO：如有 icon 圖片，用 <img src="icon.png"> -->
           大
         </div>
         <div class="app-main-info">
           <div class="app-title">大老爺</div>
-          <div class="app-subtitle">安裝前請刪除，安裝後請點選去信任</div>
+          <div class="app-subtitle">高品質遊戲體驗，立即安裝</div>
 
           <div class="btn-row">
             <button class="btn btn-primary" id="install-btn">免費安裝</button>
-            <button class="btn btn-secondary" id="trust-btn">去信任</button>
           </div>
         </div>
       </div>
@@ -278,8 +269,7 @@
       <div class="section">
         <div class="section-title">簡介</div>
         <p class="intro-text">
-          大老爺 是一款免費版的 App，由公司專業團隊開發打造，目前此 App 已經獲得蘋果公司授權的網頁端 App
-          Store 分發和內部的安全認證，請大家放心使用。
+          大老爺 是一款免費版的 App，由專業團隊打造，為您提供流暢、清晰的視覺體驗與最佳操作感受。
         </p>
       </div>
 
@@ -335,7 +325,7 @@
           </div>
           <div class="info-row">
             <span class="info-label">語言</span>
-            <span class="info-value">簡體中文</span>
+            <span class="info-value">繁體中文</span>
           </div>
           <div class="info-row">
             <span class="info-label">年齡分級</span>
@@ -352,31 +342,15 @@
         </p>
       </div>
     </div>
-
-    <!-- 底部 domain 按鈕 -->
-    <div class="bottom-domain">
-      <button class="domain-btn" id="domain-btn">app.qmfm.app</button>
-    </div>
   </div>
 
   <script>
-    // TODO：把這兩個網址改成你實際要導向的（安裝包 / 教學 / 官網）
-    const INSTALL_URL = 'https://your-install-or-pwa-url.com';
-    const TRUST_URL   = 'https://your-trust-guide-url.com';
+    // TODO：把這個改成你要導向的網址
+    const INSTALL_URL = 'https://your-install-url.com';
 
     document.getElementById('install-btn').addEventListener('click', () => {
-      window.location.href = INSTALL_URL;
-    });
-
-    document.getElementById('trust-btn').addEventListener('click', () => {
-      window.location.href = TRUST_URL;
-    });
-
-    // 底部 domain 按鈕（通常同 INSTALL_URL）
-    document.getElementById('domain-btn').addEventListener('click', () => {
       window.location.href = INSTALL_URL;
     });
   </script>
 </body>
 </html>
-
