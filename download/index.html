@@ -3,14 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>下載並安裝 APP</title>
-
-  <!-- PWA（如果你之後要做 PWA 可以順便用） -->
-  <meta name="theme-color" content="#111111" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-
+  <title>大老爺 - 安裝頁面</title>
   <style>
     * {
       box-sizing: border-box;
@@ -21,7 +14,7 @@
     }
 
     body {
-      background: #05060a;
+      background: #050508;
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -29,257 +22,361 @@
       padding: 16px;
     }
 
-    .container {
+    .page {
       width: 100%;
       max-width: 480px;
       margin: auto;
-      background: linear-gradient(145deg, #111319, #090b10);
-      border-radius: 20px;
-      padding: 20px 18px 24px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .app-header {
+    .card {
+      background: #101018;
+      border-radius: 22px;
+      padding: 18px 16px 20px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .top-row {
       display: flex;
       align-items: center;
       margin-bottom: 16px;
     }
 
-    .app-icon {
-      width: 64px;
-      height: 64px;
+    .icon {
+      width: 72px;
+      height: 72px;
       border-radius: 16px;
-      background: linear-gradient(135deg, #f9c449, #f05c2b);
+      overflow: hidden;
+      margin-right: 14px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #ffd25c, #f05b2a);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
       font-weight: 900;
+      font-size: 30px;
       color: #1a1204;
-      margin-right: 14px;
+    }
+    .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .app-info h1 {
+    .app-main-info {
+      flex: 1;
+    }
+    .app-title {
       font-size: 20px;
+      font-weight: 600;
       margin-bottom: 4px;
     }
-
-    .app-info p {
-      font-size: 13px;
-      color: #a6b0c2;
-    }
-
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 16px 0 20px;
+    .app-subtitle {
       font-size: 12px;
-      color: #cfd6e3;
+      color: #a8afbd;
     }
 
-    .meta-item span {
-      display: block;
-    }
-
-    .meta-label {
-      color: #7d8597;
-      font-size: 11px;
-      margin-bottom: 2px;
-    }
-
-    .rating {
+    .btn-row {
       display: flex;
-      align-items: center;
-      gap: 4px;
+      gap: 8px;
+      margin-top: 10px;
     }
-
-    .star {
-      font-size: 13px;
-    }
-
-    .install-btn {
-      width: 100%;
-      border: none;
+    .btn {
+      flex: 1;
       border-radius: 999px;
-      padding: 14px 0;
-      font-size: 16px;
+      border: none;
+      padding: 8px 0;
+      font-size: 14px;
       font-weight: 600;
-      background: linear-gradient(135deg, #ffcc48, #ff8b2d);
-      color: #1a1204;
       cursor: pointer;
-      margin-bottom: 10px;
-      box-shadow: 0 8px 20px rgba(255,180,65,0.35);
+    }
+    .btn-primary {
+      background: #0a84ff;
+      color: #ffffff;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.5);
     }
 
-    .install-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 3px 10px rgba(255,180,65,0.25);
-    }
-
-    .install-note {
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin: 18px 0 16px;
       text-align: center;
       font-size: 11px;
-      color: #9aa4ba;
-      margin-bottom: 14px;
+      color: #cfd3dd;
     }
-
-    .tips-box {
-      background: rgba(15,20,30,0.9);
-      border-radius: 14px;
-      padding: 10px 12px 12px;
-      border: 1px solid rgba(255,255,255,0.03);
-      margin-bottom: 10px;
+    .stats-item-title {
+      font-size: 10px;
+      color: #8a92a2;
+      margin-bottom: 4px;
     }
-
-    .tips-title {
-      font-size: 12px;
+    .big-score {
+      font-size: 20px;
       font-weight: 600;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
-
-    .dot {
-      width: 6px;
+    .star-line {
       height: 6px;
       border-radius: 999px;
-      background: #3dd68c;
+      background: linear-gradient(90deg, #ffcc48 0, #ffcc48 70%, #2b2f3a 70%);
+      margin: 6px 0;
     }
 
-    .tips-text {
-      font-size: 11px;
-      color: #a6b0c2;
+    .section {
+      margin-bottom: 18px;
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .intro-text {
+      font-size: 13px;
+      color: #d5dae6;
       line-height: 1.5;
     }
 
-    .platform-tag {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      font-size: 10px;
-      margin-bottom: 4px;
-      color: #cfd6e3;
+    .rating-block {
+      background: #181821;
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .rating-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .rating-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .rating-small-star {
+      color: #ffcc48;
+      letter-spacing: 1px;
+      font-size: 12px;
+    }
+    .rating-total {
+      font-size: 11px;
+      color: #8f96a5;
     }
 
-    .footer-text {
-      margin-top: 6px;
-      text-align: center;
-      font-size: 10px;
-      color: #6f7480;
+    .review-card {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .review-title-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+    .review-name {
+      font-size: 11px;
+      color: #c2c9d6;
+    }
+    .review-text {
+      font-size: 11px;
+      color: #d5dae6;
+      line-height: 1.5;
+    }
+
+    .info-list {
+      background: #181821;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    .info-label {
+      color: #9aa0b3;
+    }
+    .info-value {
+      color: #e1e5f2;
+    }
+
+    .disclaimer {
+      font-size: 11px;
+      color: #8b93a3;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .bottom-domain {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .domain-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #ffffff;
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- 上方 APP 資訊 -->
-    <div class="app-header">
-      <div class="app-icon">
-        <!-- 這裡可以改成你的 LOGO 文字 -->
-        M
+  <div class="page">
+    <div class="card">
+      <!-- 上半部：icon + 名稱 + 按鈕 -->
+      <div class="top-row">
+        <div class="icon">
+          <!-- TODO：如果有 icon 圖片，把下面 <span> 換成 <img src="你的icon.png"> -->
+          大
+        </div>
+        <div class="app-main-info">
+          <div class="app-title">大老爺</div>
+          <div class="app-subtitle">安裝前請刪除，安裝後請點選去信任</div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" id="install-btn">免費安裝</button>
+            <button class="btn btn-secondary" id="trust-btn">去信任</button>
+          </div>
+        </div>
       </div>
-      <div class="app-info">
-        <!-- APP 名稱 -->
-        <h1>MT 真人娛樂 APP</h1>
-        <!-- 簡短描述 -->
-        <p>真人視訊、熱門老虎機，一鍵安裝立即開玩</p>
+
+      <!-- 中間統計數據 -->
+      <div class="stats-row">
+        <div>
+          <div class="stats-item-title">評分</div>
+          <div class="big-score">4.9</div>
+          <div class="rating-small-star">★★★★★</div>
+          <div class="rating-total">10088 個評分</div>
+        </div>
+        <div>
+          <div class="stats-item-title">年齡</div>
+          <div style="margin-top:8px;">18+ 歲</div>
+        </div>
+        <div>
+          <div class="stats-item-title">排行榜</div>
+          <div style="margin-top:8px;">#1 應用</div>
+        </div>
+        <div>
+          <div class="stats-item-title">大小</div>
+          <div style="margin-top:8px;">2.87 MB</div>
+        </div>
+      </div>
+
+      <!-- 簡介 -->
+      <div class="section">
+        <div class="section-title">簡介</div>
+        <p class="intro-text">
+          大老爺 是一款免費版的 App，由公司專業團隊開發打造，目前此 App 已經獲得蘋果公司授權的網頁端 App
+          Store 分發和內部的安全認證，請大家放心使用。
+        </p>
+      </div>
+
+      <!-- 評分及評論 -->
+      <div class="section">
+        <div class="section-title">評分及評論</div>
+        <div class="rating-block">
+          <div class="rating-header">
+            <div class="rating-left">
+              <span class="big-score">4.9</span>
+              <span class="rating-small-star">★★★★★</span>
+              <span class="rating-total">滿分 5 分．10088 個評分</span>
+            </div>
+            <div style="flex:1; margin-left:12px;">
+              <div class="star-line"></div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-title-row">
+              <span>Very good app, recommended!</span>
+              <span style="font-size:11px;color:#8f96a5;">11-16</span>
+            </div>
+            <div style="font-size:11px;color:#ffcc48;margin-bottom:4px;">★★★★★</div>
+            <div class="review-name">James Levine</div>
+            <div class="review-text" style="margin-top:4px;">
+              This app is really easy to use, the app is smooth and not stuck,
+              the picture is clear, the operation is simple and convenient.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 資訊 -->
+      <div class="section">
+        <div class="section-title">信息</div>
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label">供應商</span>
+            <span class="info-value">大老爺</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">安裝包大小</span>
+            <span class="info-value">2.87M</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">版本</span>
+            <span class="info-value">V2.0.12</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">兼容性</span>
+            <span class="info-value">iOS 9.0 或更高版本</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">語言</span>
+            <span class="info-value">簡體中文</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">年齡分級</span>
+            <span class="info-value">限 18 歲以上</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">價格</span>
+            <span class="info-value">免費</span>
+          </div>
+        </div>
+
+        <p class="disclaimer">
+          免責聲明：本網站僅提供下載託管，App 內容相關事項由開發者負責，與本網站無關。
+        </p>
       </div>
     </div>
 
-    <!-- 評分、下載數、年齡 -->
-    <div class="meta-row">
-      <div class="meta-item">
-        <span class="meta-label">評分</span>
-        <span class="rating">
-          4.9
-          <span class="star">★</span>
-        </span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">下載次數</span>
-        <span>100K+</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">年齡分級</span>
-        <span>18+</span>
-      </div>
-    </div>
-
-    <!-- 安裝按鈕 -->
-    <button class="install-btn" id="installBtn">
-      立即安裝 APP
-    </button>
-
-    <div class="install-note">
-      安裝僅需 3 秒，完成後將自動開啟遊戲頁面。
-    </div>
-
-    <!-- Android 提示 -->
-    <div class="tips-box" id="androidTips" style="display:none">
-      <div class="platform-tag">Android 安裝教學</div>
-      <div class="tips-title">
-        <div class="dot"></div>
-        安裝步驟
-      </div>
-      <div class="tips-text">
-        1. 點擊上方「立即安裝 APP」<br />
-        2. 如果出現瀏覽器提示，選擇「安裝」或「加入主畫面」<br />
-        3. 回到桌面，找到「MT 真人娛樂」圖示點擊開啟
-      </div>
-    </div>
-
-    <!-- iOS 提示 -->
-    <div class="tips-box" id="iosTips" style="display:none">
-      <div class="platform-tag">iPhone 安裝教學</div>
-      <div class="tips-title">
-        <div class="dot"></div>
-        安裝步驟
-      </div>
-      <div class="tips-text">
-        1. 使用 Safari 打開此頁面<br />
-        2. 點擊下方「分享」圖示（方框＋向上箭頭）<br />
-        3. 選擇「加入主畫面」，名稱可改為你喜歡的名稱<br />
-        4. 按「加入」，回到桌面點擊圖示開啟
-      </div>
-    </div>
-
-    <div class="footer-text">
-      若無法安裝，請直接點擊「立即安裝 APP」進入線上版本。
+    <!-- 底部 domain 按鈕 -->
+    <div class="bottom-domain">
+      <button class="domain-btn" id="domain-btn">app.qmfm.app</button>
     </div>
   </div>
 
   <script>
-    // 這裡設定你要導向的實際網址（遊戲、註冊頁或 PWA）
-    const TARGET_URL = 'https://gm89.net'; // TODO：改成你的網址
+    // TODO：把這兩個網址改成你實際要導向的（安裝包 / 教學 / 官網）
+    const INSTALL_URL = 'https://your-install-or-pwa-url.com';
+    const TRUST_URL   = 'https://your-trust-guide-url.com';
 
-    const installBtn = document.getElementById('installBtn');
-    const androidTips = document.getElementById('androidTips');
-    const iosTips = document.getElementById('iosTips');
+    document.getElementById('install-btn').addEventListener('click', () => {
+      window.location.href = INSTALL_URL;
+    });
 
-    // 簡單判斷平台
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isAndroid = /Android/i.test(ua);
-    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    document.getElementById('trust-btn').addEventListener('click', () => {
+      window.location.href = TRUST_URL;
+    });
 
-    if (isAndroid) {
-      androidTips.style.display = 'block';
-    } else if (isIOS) {
-      iosTips.style.display = 'block';
-    }
-
-    // 假裝安裝：按下按鈕後先短暫顯示「安裝中」，再跳轉到你的網址
-    installBtn.addEventListener('click', () => {
-      installBtn.disabled = true;
-      installBtn.textContent = '安裝中…';
-
-      // 這裡如果你有做 PWA，可以在這之前彈出提示叫他「加入主畫面」
-      // 或直接跳轉到你的實際遊戲 / 註冊網址
-      setTimeout(() => {
-        window.location.href = TARGET_URL;
-      }, 800); // 假裝安裝 0.8 秒
+    // 底部 domain 按鈕（通常同 INSTALL_URL）
+    document.getElementById('domain-btn').addEventListener('click', () => {
+      window.location.href = INSTALL_URL;
     });
   </script>
 </body>
 </html>
+
