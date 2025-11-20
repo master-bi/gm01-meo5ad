@@ -36,7 +36,7 @@
       border:none;
       cursor:pointer;
     }
-    #info, #debug {
+    #info {
       font-size:12px;
       color:#aaa;
       margin-top:8px;
@@ -102,48 +102,39 @@
     <p>即將為您啟動應用</p>
     <button class="btn" id="go">立即前往</button>
     <p id="info"></p>
-    <p id="debug"></p> <!-- 這行用來顯示現在跑到哪裡 -->
   </div>
 
   <!-- iPhone 中央提示彈窗 -->
   <div id="iosMask"></div>
   <div id="iosPopup">
     <h3>加入主畫面</h3>
-    <p style="color:#444; font-size:14px; margin:0; line-height:1.6;">
-      1. 點擊 Safari 下方的
-      <span style="display:inline-flex; align-items:center;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-            xmlns="http://www.w3.org/2000/svg" style="margin:0 4px; vertical-align:middle;">
-          <path d="M12 3L12 15" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-          <path d="M7 8L12 3L17 8" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M5 11V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V11"
-                stroke="#000" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        分享
-      </span>
-      按鈕<br>
-      2. 選擇「加入主畫面」即可安裝 APP
-    </p>
+    
+   <p style="color:#444; font-size:14px; margin:0; line-height:1.6;">
+  1. 點擊 Safari 下方的
+  <span style="display:inline-flex; align-items:center;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+         xmlns="http://www.w3.org/2000/svg" style="margin:0 4px; vertical-align:middle;">
+      <path d="M12 3L12 15" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+      <path d="M7 8L12 3L17 8" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 11V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V11"
+            stroke="#000" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    分享
+  </span>
+  按鈕<br>
+  2. 選擇「加入主畫面」即可安裝 APP
+</p>
+
+
     <button id="iosClose">我知道了</button>
   </div>
 
 <script>
   const TARGET_URL = "https://ag223.gm89.net/login?id=register";
 
-  // 簡單 debug 函式：把文字寫到畫面上
-  const debugEl = document.getElementById("debug");
-  function dbg(msg) {
-    if (debugEl) debugEl.innerHTML += msg + "<br>";
-    console.log(msg);
-  }
-
   // 1. 註冊 Service Worker
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js")
-      .then(() => dbg("SW 註冊成功"))
-      .catch(err => dbg("SW 註冊失敗: " + err));
-  } else {
-    dbg("此瀏覽器不支援 Service Worker");
+    navigator.serviceWorker.register("sw.js").catch(console.error);
   }
 
   // 2. 判斷是否從主畫面啟動
@@ -152,19 +143,13 @@
     window.navigator.standalone === true;
 
   // 3. 平台判斷
-  const ua = navigator.userAgent || "";
-  const isIOS = /iphone|ipad|ipod/i.test(ua);
-  const isAndroid = /android/i.test(ua);
-
-  if (isIOS) dbg("偵測到平台：iOS");
-  else if (isAndroid) dbg("偵測到平台：Android");
-  else dbg("偵測到平台：其他 (" + ua + ")");
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
   // 4. Android beforeinstallprompt 暫存
   let deferredPrompt = null;
 
   window.addEventListener("beforeinstallprompt", (e) => {
-    dbg("beforeinstallprompt 事件觸發");
+    console.log("beforeinstallprompt 觸發");
     e.preventDefault();
     deferredPrompt = e;
 
@@ -176,44 +161,35 @@
 
   // 已安裝 → APP 模式 → 直接跳官網
   if (isStandalone) {
-    dbg("偵測到已安裝（standalone），直接跳轉官網");
     location.replace(TARGET_URL);
   } else {
     // 尚未安裝
     const btn = document.getElementById("go");
     if (btn) {
       btn.addEventListener("click", async () => {
-        dbg("點擊『立即前往』");
 
         // Android 安裝流程
         if (deferredPrompt) {
-          dbg("偵測到 deferredPrompt，顯示安裝對話框");
           deferredPrompt.prompt();
           try {
             const choiceResult = await deferredPrompt.userChoice;
-            dbg("使用者安裝選擇: " + choiceResult.outcome);
 
             if (choiceResult.outcome === "accepted") {
               alert("已送出安裝，請回到手機主畫面，找到「大老爺」圖示開啟。");
               return; // 不跳官網，讓使用者去桌面找 APP
             }
-          } catch (err) {
-            dbg("安裝流程錯誤: " + err);
-          }
+          } catch (err) { console.error(err); }
 
           deferredPrompt = null;
-        } else {
-          dbg("沒有 deferredPrompt（可能瀏覽器不支援或尚未觸發），直接跳官網");
         }
 
-        // 沒安裝事件 → 直接幫你開官網
+        // 沒安裝事件 → 直接跳官網
         window.location.href = TARGET_URL;
       });
     }
 
     // iPhone 彈窗 ※中央顯示
     if (isIOS) {
-      dbg("顯示 iOS 安裝教學彈窗");
       const mask = document.getElementById("iosMask");
       const popup = document.getElementById("iosPopup");
       const closeBtn = document.getElementById("iosClose");
@@ -234,8 +210,6 @@
         mask.style.display = "none";
         window.location.href = TARGET_URL;
       });
-    } else {
-      dbg("非 iOS，不顯示 iOS 彈窗");
     }
   }
 </script>
