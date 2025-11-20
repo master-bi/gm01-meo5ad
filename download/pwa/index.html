@@ -2,17 +2,16 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>大老爺</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>大老爺</title>
 
-  
-  <!-- iPhone 全螢幕 APP 必備 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="大老爺">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="大老爺">
 
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icons/180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/180.png">
+
   ...
 </head>
 
@@ -51,38 +50,75 @@
     <button class="btn" id="go">立即前往</button>
   </div>
 
-  <script>
-    // 註冊 PWA 的 Service Worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
-    }
+ <script>
+  const TARGET_URL = "https://ag223.gm89.net/login?id=register";
 
-    // Android 安裝提示
-    let deferredPrompt;
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
+  // 1. 註冊 Service Worker（iOS / Android 都需要）
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+  }
 
-      // 自動跳出安裝提示
+  // 2. 判斷是否是「已安裝的 APP 模式」
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  // 3. Android：攔截 beforeinstallprompt 事件
+  let deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    // 阻止預設的迷你提示列，改成我們自己控制
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // 也可以在這邊自動彈出安裝提示（只針對 Android）
+    if (!isStandalone) {
       setTimeout(() => {
         if (deferredPrompt) {
           deferredPrompt.prompt();
         }
-      }, 800);
-    });
-
-    // 按鈕 → 跳回你的官網
-    document.getElementById("go").addEventListener("click", () => {
-      location.replace("https://ag223.gm89.net/login?id=register");
-    });
-
-    // iPhone 引導安裝
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isStandalone = window.navigator.standalone === true;
-
-    if (isIOS && !isStandalone) {
-      alert("iPhone安裝方式：\n1. 點擊 Safari 下方分享按鈕\n2. 選擇「加入主畫面」\n3. 完成安裝後再開啟 APP");
+      }, 1000);
     }
-  </script>
+  });
+
+  if (isStandalone) {
+    // ✅ 已經是從主畫面打開 → 直接換頁到你的官網，不留返回紀錄
+    location.replace(TARGET_URL);
+  } else {
+    // ✅ Safari / Chrome 裡面瀏覽時的行為
+
+    const btn = document.getElementById("go");
+    if (btn) {
+      btn.addEventListener("click", async () => {
+        // 如果是 Android，且有安裝提示事件，就先呼叫安裝
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          try {
+            const choiceResult = await deferredPrompt.userChoice;
+            // 這裡你可以依照 accepted / dismissed 做不同處理
+            // console.log(choiceResult.outcome);
+          } catch (err) {
+            console.error(err);
+          }
+          deferredPrompt = null;
+        }
+
+        // 無論如何最後都導去你的官網
+        window.location.href = TARGET_URL;
+      });
+    }
+
+    // iOS：顯示「加入主畫面」教學
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isIOS) {
+      alert(
+        "安裝教學：\n\n1. 點下方中間的【分享】按鈕（方框上箭頭）\n" +
+        "2. 往下滑選擇「加入主畫面」\n" +
+        "3. 回到主畫面點『大老爺』圖示啟動 APP"
+      );
+    }
+  }
+</script>
+
 </body>
 </html>
