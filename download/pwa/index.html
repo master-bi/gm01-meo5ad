@@ -55,65 +55,66 @@
 
   // 1. 註冊 Service Worker（iOS / Android 都需要）
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js");
+    navigator.serviceWorker.register("sw.js").catch(console.error);
   }
 
-  // 2. 判斷是否是「已安裝的 APP 模式」
+  // 2. 判斷是否是「已安裝的 APP 模式」（從主畫面打開）
   const isStandalone =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
 
-  // 3. Android：攔截 beforeinstallprompt 事件
+  // 3. Android 安裝事件暫存
   let deferredPrompt = null;
 
   window.addEventListener("beforeinstallprompt", (e) => {
-    // 阻止預設的迷你提示列，改成我們自己控制
+    console.log("beforeinstallprompt 觸發");
     e.preventDefault();
     deferredPrompt = e;
 
-    // 也可以在這邊自動彈出安裝提示（只針對 Android）
-    if (!isStandalone) {
-      setTimeout(() => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-        }
-      }, 1000);
+    const info = document.getElementById("info");
+    if (info) {
+      info.textContent = "此裝置支援安裝到主畫面，點擊下方按鈕即可安裝。";
     }
   });
 
   if (isStandalone) {
-    // ✅ 已經是從主畫面打開 → 直接換頁到你的官網，不留返回紀錄
+    // ✅ 已安裝（從主畫面開啟）→ 直接換成官網，不留上一頁紀錄
     location.replace(TARGET_URL);
   } else {
-    // ✅ Safari / Chrome 裡面瀏覽時的行為
-
+    // ✅ 尚未安裝：處理按鈕行為
     const btn = document.getElementById("go");
     if (btn) {
       btn.addEventListener("click", async () => {
-        // 如果是 Android，且有安裝提示事件，就先呼叫安裝
+        // 若是 Android 且有安裝事件
         if (deferredPrompt) {
           deferredPrompt.prompt();
           try {
             const choiceResult = await deferredPrompt.userChoice;
-            // 這裡你可以依照 accepted / dismissed 做不同處理
-            // console.log(choiceResult.outcome);
+            console.log("userChoice:", choiceResult.outcome);
+
+            if (choiceResult.outcome === "accepted") {
+              // 使用者真的按了「安裝」
+              alert("已送出安裝，請回到手機主畫面，找到「大老爺」圖示開啟。\n\n之後再從圖示進入就會直接開啟遊戲頁面。");
+              // 不立刻跳轉官網，讓他自己先回桌面看
+              return;
+            }
           } catch (err) {
             console.error(err);
           }
           deferredPrompt = null;
         }
 
-        // 無論如何最後都導去你的官網
+        // 沒有安裝事件（或使用者拒絕安裝）→ 直接幫你開官網
         window.location.href = TARGET_URL;
       });
     }
 
-    // iOS：顯示「加入主畫面」教學
+    // iOS：給安裝教學
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     if (isIOS) {
       alert(
-        "安裝教學：\n\n1. 點下方中間的【分享】按鈕（方框上箭頭）\n" +
-        "2. 往下滑選擇「加入主畫面」\n" +
+        "iPhone 安裝步驟：\n\n1. 請點下方中間的【分享】按鈕（方框上箭頭）\n" +
+        "2. 往下滑選「加入主畫面」\n" +
         "3. 回到主畫面點『大老爺』圖示啟動 APP"
       );
     }
